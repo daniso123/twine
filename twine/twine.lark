@@ -1,1 +1,61 @@
-// A gramática está vazia, por enquanto...
+// Símbolos não-terminais (regras sintáticas)
+program: define*
+define: IDENTIFIER "=" "f" "(" params function_return ")" body
+params: [param ["," param]+]
+?function_return: "returns" TYPE
+param: IDENTIFIER ":" TYPE
+?body: print_expression body
+    | expression
+print_expression: "print" "(" expression ")"
+?expression: simple_expression
+          | simple_expression "=" expression -> eq
+          | simple_expression "<" expression  -> lt
+?simple_expression: term
+                 | term "|" simple_expression -> or_
+                 | term "+" simple_expression -> add
+                 | term "-" simple_expression -> sub
+?term: factor
+    | factor "^" term -> and_
+    | factor "*" term -> mul
+    | factor "/" term -> div
+
+?factor: BOOLEAN
+      | INTEGER
+      | TILDE factor -> not_
+      | MINUS factor -> neg
+      | IDENTIFIER
+      | IDENTIFIER "(" args ")" -> fcall
+      | "if" "(" expression ")" expression "else" expression -> cond
+      | LPAR expression RPAR
+
+args: [expression ["," expression]+]
+
+// Símbolos terminais (regras léxicas)
+
+WHITESPACE: /\s+/
+BOOLEAN: "true"
+       | "false"
+COMMENT: /%.*/
+COMMA: ","
+SEMICOLON: ":"
+PRINT: "print"
+IDENTIFIER: /[a-zA-Z$][a-zA-Z$_0-9]*/
+EQUAL: "="
+LESS: "<"
+PIPE: "|"
+PLUS: "+"
+MINUS: "-"
+HAT: "^"
+MUL: "*"
+SLASH: "/"
+F: "f"
+TILDE: "~"
+IF: "if"
+LPAR: "("
+RPAR: ")"
+ELSE: "else"
+RETURNS: "returns"
+TYPE: "integer" | "boolean"
+%ignore COMMENT
+%ignore WHITESPACE
+INTEGER: "0" | /[1-9][0-9]*/

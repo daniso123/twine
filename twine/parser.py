@@ -1,6 +1,8 @@
 from lark import Lark, Tree, Token
 from pathlib import Path
 from typing import Dict, Iterable
+from .grammar import GRAMMAR
+
 
 #
 # Constantes que armazenam a gramática do Lark no módulo.
@@ -13,8 +15,11 @@ GRAMMAR_PATH = Path(__file__).parent / "twine.lark"
 GRAMMAR_SRC = GRAMMAR_PATH.read_text()
 
 
+#def parse(src: str) -> Tree:
+ #   """
+  #  Analiza o código fonte e retorna a árvore sintática Lark.
+   # """
+   # return Tree("not_implemented", ["me", "implemente", "aqui :)"])
+
 def parse(src: str) -> Tree:
-    """
-    Analiza o código fonte e retorna a árvore sintática Lark.
-    """
-    return Tree("not_implemented", ["me", "implemente", "aqui :)"])
+    return GRAMMAR.parse(src)

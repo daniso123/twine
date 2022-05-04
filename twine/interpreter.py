@@ -15,12 +15,24 @@ Value = Union[bool, int, Callable]
 # Por isso, usamos MutableMapping, no lugar de Dict.
 Env = MutableMapping[str, Value]
 
+operator_list = ['+', '-', '*', '/', '=', '<', '^', '|']
 
 def eval(sexpr: SExpr, env: Env) -> Value:
     """
     Executa uma S-Expression dentro do ambiente dado.
     """
-    return 42  # ... implemente a versão correta aqui!
+    if(type(sexpr) == list):
+        if(sexpr[0] in operator_list):
+            return eval(env.get(sexpr[0])(sexpr[1], sexpr[2]), env)
+        if(sexpr[0] == 'print'):
+            print(sexpr[1])
+            return eval(sexpr[2], env)
+        if(sexpr[0] == 'if'):
+            if(eval(sexpr[1], env)):
+                return eval(sexpr[2], env)
+            else:
+                return eval(sexpr[3], env)
+    return sexpr  # ... implemente a versão correta aqui!
 
 
 def compile_function(
@@ -77,7 +89,12 @@ def default_env():
     return {
         "+": lambda x, y: x + y,
         "-": lambda x, y: x - y,
-        "...": ...,
+        "*": lambda x, y: x * y,
+        "/": lambda x, y: x // y,
+        "=": lambda x, y: x == y,
+        "<": lambda x, y: x < y,
+        "|": lambda x, y: x or y,
+        "^": lambda x, y: x and y,
     }
 
 
