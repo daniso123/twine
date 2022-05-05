@@ -9,6 +9,7 @@ def lt(x, y):
     """
     Implementa o operador de "menor que"
     """
+    
     return x < y
 
 
